@@ -99,6 +99,7 @@ module Nano::Views
 	p do
 		a "home", :href => R(Index)
 	end
+	p "nanoblogger, by Matt (2010)"
   end
 
   def home
