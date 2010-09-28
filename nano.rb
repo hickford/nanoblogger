@@ -2,19 +2,14 @@ require 'camping'
 require 'active_record'
 require 'action_view'
 Camping.goes :Nano
-#require 'rubygems'
-#gem 'actionpack'
 include ActionView::Helpers::DateHelper
 
 dbconfig = YAML.load(File.read('config/database.yml'))
-#ActiveRecord::Base.establish_connection dbconfig['production']
 
 # decide if we are running on Heroku based on the presence of their DB environment variable and use the appropriate DB
 environment = ENV['DATABASE_URL'] ? 'production' : 'development'
-
-# attach to the DB and run the create method for the Blog app
+# attach to the DB and run the create method for the app
 Nano::Models::Base.establish_connection dbconfig[environment]
-Nano.create if Nano.respond_to? :create
 
 module Nano::Models
   class Post < Base
@@ -33,14 +28,14 @@ module Nano::Models
     def self.down
       drop_table Post.table_name
     end
-
   end
-  
 end
 
 def Nano.create
   Nano::Models.create_schema
 end
+
+Nano.create
 
 module Nano::Controllers
   class Index
@@ -149,4 +144,3 @@ module Nano::Views
     end
   end
 end
-
