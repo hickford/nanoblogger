@@ -4,13 +4,17 @@ require 'action_view'
 Camping.goes :Nano
 #require 'rubygems'
 #gem 'actionpack'
-
-# for heroku, not for me
-dbconfig = YAML.load(File.read('config/database.yml'))
-ActiveRecord::Base.establish_connection dbconfig['production']
-
 include ActionView::Helpers::DateHelper
 
+dbconfig = YAML.load(File.read('config/database.yml'))
+#ActiveRecord::Base.establish_connection dbconfig['production']
+
+# decide if we are running on Heroku based on the presence of their DB environment variable and use the appropriate DB
+environment = ENV['DATABASE_URL'] ? 'production' : 'development'
+
+# attach to the DB and run the create method for the Blog app
+Nano::Models::Base.establish_connection dbconfig[environment]
+Nano.create if Nano.respond_to? :create
 
 module Nano::Models
   class Post < Base
