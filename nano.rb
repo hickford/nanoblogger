@@ -4,6 +4,9 @@ Camping.goes :Nano
 #gem 'actionpack'
 require 'action_view'
 include ActionView::Helpers::DateHelper
+require 'activerecord'
+dbconfig = YAML.load(File.read('config/database.yml'))
+ActiveRecord::Base.establish_connection dbconfig['production']
 
 module Nano::Models
   class Post < Base
