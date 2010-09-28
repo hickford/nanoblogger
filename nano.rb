@@ -1,12 +1,14 @@
 require 'camping'
+require 'activerecord'
+require 'action_view'
 Camping.goes :Nano
 #require 'rubygems'
 #gem 'actionpack'
-require 'action_view'
-include ActionView::Helpers::DateHelper
-require 'activerecord'
 dbconfig = YAML.load(File.read('config/database.yml'))
 ActiveRecord::Base.establish_connection dbconfig['production']
+
+include ActionView::Helpers::DateHelper
+
 
 module Nano::Models
   class Post < Base
