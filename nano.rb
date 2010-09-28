@@ -61,7 +61,8 @@ module Nano::Controllers
 	    if @input.content.strip.length > 0
 			@post = Post.create(:author=>author,:content=>@input.content,:created_at=>Time.now)
 		end
-		redirect AuthorX, author
+		#redirect AuthorX, author
+		redirect Index
 	  end
   end
 	
@@ -99,7 +100,7 @@ module Nano::Views
 	p do
 		a "home", :href => R(Index)
 	end
-	p "nanoblogger, by Matt (2010)"
+	#p "nanoblogger, by Matt (2010)"
   end
 
   def home
