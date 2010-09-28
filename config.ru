@@ -1,2 +1,2 @@
-﻿require 'nano'
+require 'nano'
 run Nano
