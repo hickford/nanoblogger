@@ -1,9 +1,11 @@
 require 'camping'
-require 'activerecord'
+require 'active_record'
 require 'action_view'
 Camping.goes :Nano
 #require 'rubygems'
 #gem 'actionpack'
+
+# for heroku, not for me
 dbconfig = YAML.load(File.read('config/database.yml'))
 ActiveRecord::Base.establish_connection dbconfig['production']
 
