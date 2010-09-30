@@ -44,6 +44,14 @@ module Nano::Controllers
       @ttl = "Nanoblogger"
       render :home
     end
+    
+    def post
+      if @input.content.strip.length > 0
+        @post = Post.create(:author=>@input.author.strip,:content=>@input.content.strip,:created_at=>Time.now)
+      end
+      redirect Index
+    end
+
   end
 
   class AuthorX
@@ -54,20 +62,20 @@ module Nano::Controllers
       render :singleAuthor
     end
     
-    def post(author)
-      if @input.content.strip.length > 0
-        @post = Post.create(:author=>author,:content=>@input.content,:created_at=>Time.now)
-      end
-    #redirect AuthorX, author
-    redirect Index
+  end
+  
+  class New
+    def get
+      @ttl = "Nanoblogger"
+      render :new
     end
   end
   
-  class AuthorXNew
+  class NewX
     def get(author)
+      @ttl = "Nanoblogger"
       @author = author
-      @ttl = "%s on Nanoblogger" % author
-      render :edit
+      render :new
     end
   end
   
@@ -112,9 +120,14 @@ module Nano::Views
         end
       end
     end
-    form :action => R(Index), :method => :get do
-    input :type => :submit, :value => "new user"
-    input "", :type=>"text",:name => :author
+    h2 "New post"
+    form :action => R(Index), :method => :post do
+      p "your name:"
+      input "", :type => "text", :name => :author
+      p "your message:"
+      textarea "", :name => :content, :rows => 10, :cols => 50
+      br
+      input :type => :submit, :value => "post!"
     end
   end
 
@@ -129,16 +142,19 @@ module Nano::Views
       end
     end
     p do
-      a "new post", :href => R(AuthorXNew, author)
+      a "new post", :href => R(NewX, author)
     end
   end
   
-  def edit
-    h1 "#{@author} writes:"
-    form :action => R(AuthorX, @author), :method => :post do
+  def new
+    h2 "New post"
+    form :action => R(Index), :method => :post do
+      p "your name:"
+      input "", :type => "text", :name => :author, :value => @author
+      p "your message:"
       textarea "", :name => :content, :rows => 10, :cols => 50
       br
-      input :type => :submit, :value => "blog!"
+      input :type => :submit, :value => "post!"
     end
   end
 end
