@@ -4,10 +4,6 @@ require 'action_view'
 include ActionView::Helpers::DateHelper
 Camping.goes :Nano
 
-dbconfig = YAML.load(File.read('config/database.yml'))
-environment = ENV['DATABASE_URL'] ? 'production' : 'development'
-Nano::Models::Base.establish_connection dbconfig[environment]
-
 module Nano::Models
   class Post < Base
   end
@@ -32,8 +28,6 @@ def Nano.create
   Nano::Models.create_schema
 end
 
-Nano.create
-
 module Nano::Controllers
   class Index
     def get
@@ -47,7 +41,7 @@ module Nano::Controllers
     
     def post
       if @input.content.strip.length > 0
-        @post = Post.create(:author=>@input.author.strip,:content=>@input.content.strip,:created_at=>Time.now)
+        Post.create(:author=>@input.author.strip,:content=>@input.content.strip)
       end
       redirect Index
     end
@@ -89,7 +83,7 @@ module Nano::Controllers
         li:nth-child(odd){background-color:\#eee}
      }
     end
-   end
+  end
 end
 
 module Nano::Views
