@@ -110,6 +110,7 @@ module Nano::Views
         link :rel => 'stylesheet',:type => 'text/css',:href => '/styles.css'
         script "", :type => 'text/javascript', :src => 'https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js'
         script "", :type => 'text/javascript', :src => 'http://js.pusherapp.com/1.6/pusher.min.js'
+        script "", :type => 'text/javascript', :src => '/nano.js'
       end
       body { self << yield }
     end
@@ -119,7 +120,6 @@ module Nano::Views
   end
 
   def home
-    script "", :type => 'text/javascript', :src => '/nano.js'
     h1 "Recent updates"
     ul.posts! do
       @posts.each do |post|

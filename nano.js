@@ -1,3 +1,5 @@
+$(function(){
+
 var pusher = new Pusher('3e0eaf103f5b0f5ef114');
 var myChannel = pusher.subscribe('posts');
 
@@ -9,19 +11,20 @@ myChannel.bind('post-create', function(post) {
     var post = $('<li>').append(author).append(content).append(timestamp).prependTo('#posts').hide().slideDown();
 });
 
-/*
-      $('#new').submit(function () {
+      $('#new').submit( function () {
         var form = $(this),
             url = form.attr('action'),
             method = form.attr('method'),
             data = form.serialize(),
-            body = form.find('input#body');
+            textarea = form.find('textarea');
         
         $.ajax({
           type: method,
           url: url,
           data: data,
-          success: function () {body.val('')}
+          success: function () {textarea.val(''); $( 'html, body' ).animate( { scrollTop: 0 }, 0 );}
         });
         return false;
-      }); */
+      }); 
+
+});
