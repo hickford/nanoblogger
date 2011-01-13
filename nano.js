@@ -6,14 +6,12 @@ var myChannel = pusher.subscribe('posts');
 var connected = false; 
 
 pusher.bind('pusher:connection_established', function () {
-    var connected = true;
+    connected = true;
     // $('#status').hide().addClass('connected').text('receiving live updates').slideDown();
     $('#header').text('Updates (live)');
 });
 
-
 //  $("#new").validate(); // how to combine with AJAX?
-
 
 function addPost (post) {
     var author = $('<span>').addClass('author');
@@ -24,30 +22,30 @@ function addPost (post) {
 }
 myChannel.bind('post-create', addPost);
 
-
-        // if they don't have pusher they won't see their post :\
       $('#new').submit( function () {
         var form = $(this),
             url = form.attr('action'),
             method = form.attr('method'),
-            data = form.serialize(),
-            textarea = form.find('textarea');
+            data = form.serialize()
+
+        var  author = form.find('[name="author"]'),  content = form.find('[name="content"]')
         
         $.ajax({
           type: method,
           url: url,
           data: data,
-          success: function () {textarea.val(''); $( 'html, body' ).animate( { scrollTop: 0 }, 0 );}
+          success: function () {   
+                if (!connected)
+                {
+                    // display post for folk without pusher. nasty.
+                    addPost({'author':author.val(),'content':content.val()});
+                }
+                content.val(''); 
+                $( 'html, body' ).animate( { scrollTop: 0 }, 0 );  
+
+            }
         });
-
-
-        if (! connected)
-        {
-            location.reload;
-        }
-
         return false;
       }); 
-
 
 });
