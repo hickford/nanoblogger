@@ -1,3 +1,4 @@
+#!/usr/bin/ruby
 require './nano.rb'
 
 dbconfig = YAML.load(File.read('config/database.yml'))

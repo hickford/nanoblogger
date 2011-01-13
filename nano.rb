@@ -1,8 +1,14 @@
+#!/usr/bin/ruby
 require 'camping'
 require 'active_record'
 require 'action_view'
+require 'pusher'
 include ActionView::Helpers::DateHelper
 Camping.goes :Nano
+
+Pusher.app_id = '3664'
+Pusher.key    = '3e0eaf103f5b0f5ef114'
+Pusher.secret = '317b66dc033fec42247e'
 
 module Nano::Models
   class Post < Base
@@ -41,7 +47,10 @@ module Nano::Controllers
     
     def post
       if @input.content.strip.length > 0
-        Post.create(:author=>@input.author.strip,:content=>@input.content.strip)
+        @post = Post.new(:author=>@input.author.strip,:content=>@input.content.strip)
+        if @post.save
+            Pusher['posts'].trigger('post-create', @post.attributes)
+        end
       end
       redirect Index
     end
@@ -73,6 +82,13 @@ module Nano::Controllers
     end
   end
   
+  class Js < R '/nano.js'
+    def get
+        @headers['Content-Type'] = 'text/javascript'
+        File.read('nano.js')
+    end
+  end
+
   class Style < R '/styles.css'
     def get
      @headers["Content-Type"] = "text/css"
@@ -92,18 +108,20 @@ module Nano::Views
       head do
         title ttl
         link :rel => 'stylesheet',:type => 'text/css',:href => '/styles.css'
+        script "", :type => 'text/javascript', :src => 'https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js'
+        script "", :type => 'text/javascript', :src => 'http://js.pusherapp.com/1.6/pusher.min.js'
       end
       body { self << yield }
     end
   p do
     a "home", :href => R(Index)
   end
-  #p "nanoblogger, by Matt (2010)"
   end
 
   def home
+    script "", :type => 'text/javascript', :src => '/nano.js'
     h1 "Recent updates"
-    ul do
+    ul.posts! do
       @posts.each do |post|
         li do
           span.author do
@@ -115,7 +133,7 @@ module Nano::Views
       end
     end
     h2 "New post"
-    form :action => R(Index), :method => :post do
+    form.new! :action => R(Index), :method => :post do
       p "your name:"
       input "", :type => "text", :name => :author
       p "your message:"
