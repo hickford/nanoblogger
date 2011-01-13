@@ -1,15 +1,20 @@
 $(function(){
 
-var pusher = new Pusher('3e0eaf103f5b0f5ef114');
+var pusher = new Pusher( <%= Pusher.key %>); 
+
 var myChannel = pusher.subscribe('posts');
 
-myChannel.bind('post-create', function(post) {
+function addPost (post) {
     var author = $('<span>').addClass('author');
     var link = $('<a>').attr('href','/author/'+post.author).text(post.author).appendTo(author);
     var content = $('<span>').addClass('content').text(post.content);
     var timestamp = $('<span>').addClass('timestamp').text('just now');
-    var post = $('<li>').append(author).append(content).append(timestamp).prependTo('#posts').hide().slideDown();
-});
+    var li = $('<li>').append(author).append(content).append(timestamp).prependTo('#posts').hide().slideDown();
+}
+
+myChannel.bind('post-create', addPost);
+
+    /* add validation? */
 
       $('#new').submit( function () {
         var form = $(this),
@@ -22,9 +27,11 @@ myChannel.bind('post-create', function(post) {
           type: method,
           url: url,
           data: data,
-          success: function () {textarea.val(''); $( 'html, body' ).animate( { scrollTop: 0 }, 0 );}
+          success: function () {textarea.val(''); $( 'html, body' ).animate( { scrollTop: 0 }, 0 );            }
         });
         return false;
       }); 
+
+    /* if javascript on but pusher failed, nothing happens. refresh the page or add post by hand? */ 
 
 });

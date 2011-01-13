@@ -1,0 +1,5 @@
+        .author {font-weight: bold; margin: 0.5em}
+        .timestamp {font-style: italic; margin: 0.5em}
+        li:nth-child(even){background-color:white}
+        li:nth-child(odd){background-color:\#eee}
+

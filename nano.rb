@@ -2,13 +2,9 @@
 require 'camping'
 require 'active_record'
 require 'action_view'
-require 'pusher'
+require 'erb'
 include ActionView::Helpers::DateHelper
 Camping.goes :Nano
-
-Pusher.app_id = '3664'
-Pusher.key    = '3e0eaf103f5b0f5ef114'
-Pusher.secret = '317b66dc033fec42247e'
 
 module Nano::Models
   class Post < Base
@@ -46,7 +42,7 @@ module Nano::Controllers
     end
     
     def post
-      if @input.content.strip.length > 0
+      if @input.content.strip.length > 0 and @input.author.strip.length > 0
         @post = Post.new(:author=>@input.author.strip,:content=>@input.content.strip)
         if @post.save
             Pusher['posts'].trigger('post-create', @post.attributes)
@@ -85,19 +81,14 @@ module Nano::Controllers
   class Js < R '/nano.js'
     def get
         @headers['Content-Type'] = 'text/javascript'
-        File.read('nano.js')
+        ERB.new(File.read('nano.js')).result
     end
   end
 
   class Style < R '/styles.css'
     def get
      @headers["Content-Type"] = "text/css"
-     @body = %{
-        .author {font-weight: bold; margin: 0.5em}
-        .timestamp {font-style: italic; margin: 0.5em}
-        li:nth-child(even){background-color:white}
-        li:nth-child(odd){background-color:\#eee}
-     }
+     File.read('styles.css')
     end
   end
 end
