@@ -3,6 +3,7 @@ require 'camping'
 require 'active_record'
 require 'action_view'
 require 'erb'
+require 'pusher'
 include ActionView::Helpers::DateHelper
 Camping.goes :Nano
 
