@@ -1,6 +1,6 @@
 $(function(){
 
-var pusher = new Pusher( <%= Pusher.key %>); 
+var pusher = new Pusher( '<%= Pusher.key %>'); 
 
 var myChannel = pusher.subscribe('posts');
 
