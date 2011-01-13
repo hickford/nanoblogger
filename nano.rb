@@ -112,7 +112,10 @@ module Nano::Views
   end
 
   def home
-    h1 "Recent updates"
+    div.status! do
+        span ""
+    end
+    h2 "Recent updates"
     ul.posts! do
       @posts.each do |post|
         li do
