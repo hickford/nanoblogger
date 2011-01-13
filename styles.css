@@ -3,6 +3,8 @@
         li:nth-child(even){background-color:white}
         li:nth-child(odd){background-color:\#eee}
 
-        #status {float: right; display: none; border: 1px black solid; padding: 1ex;}
+        /* #status {display: none; border: 1px black solid; padding: 1ex;} */
 
-        .connected {background-color: lime;} 
+        /* .connected {background-color: lime;} */
+
+

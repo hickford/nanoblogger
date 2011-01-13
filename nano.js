@@ -1,10 +1,19 @@
 $(function(){
 
 var pusher = new Pusher( '<%= Pusher.key %>'); 
-
 var myChannel = pusher.subscribe('posts');
 
 var connected = false; 
+
+pusher.bind('pusher:connection_established', function () {
+    var connected = true;
+    // $('#status').hide().addClass('connected').text('receiving live updates').slideDown();
+    $('#header').text('Updates (live)');
+});
+
+
+//  $("#new").validate(); // how to combine with AJAX?
+
 
 function addPost (post) {
     var author = $('<span>').addClass('author');
@@ -13,20 +22,10 @@ function addPost (post) {
     var timestamp = $('<span>').addClass('timestamp').text('just now');
     var li = $('<li>').append(author).append(content).append(timestamp).prependTo('#posts').hide().slideDown();
 }
-
-      pusher.bind('pusher:connection_established', function () {
-            connected = true;
-            $('#status').addClass('connected').find('span').text('receiving live updates');
-        $('#status').fadeIn().show();
-
-      });
-
 myChannel.bind('post-create', addPost);
 
-    /* add validation? */
 
-      if (connected) {
-
+        // if they don't have pusher they won't see their post :\
       $('#new').submit( function () {
         var form = $(this),
             url = form.attr('action'),
@@ -38,12 +37,17 @@ myChannel.bind('post-create', addPost);
           type: method,
           url: url,
           data: data,
-          success: function () {textarea.val(''); $( 'html, body' ).animate( { scrollTop: 0 }, 0 );            }
+          success: function () {textarea.val(''); $( 'html, body' ).animate( { scrollTop: 0 }, 0 );}
         });
+
+
+        if (! connected)
+        {
+            location.reload;
+        }
+
         return false;
       }); 
-    }
 
-    /* if javascript on but pusher failed, nothing happens. refresh the page or add post by hand? */ 
 
 });

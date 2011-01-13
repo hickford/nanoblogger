@@ -101,8 +101,10 @@ module Nano::Views
         title ttl
         link :rel => 'stylesheet',:type => 'text/css',:href => '/styles.css'
         script "", :type => 'text/javascript', :src => 'https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js'
+        # script "", :type => 'text/javascript', :src => 'http://ajax.microsoft.com/ajax/jquery.validate/1.7/jquery.validate.min.js'
         script "", :type => 'text/javascript', :src => 'http://js.pusherapp.com/1.6/pusher.min.js'
         script "", :type => 'text/javascript', :src => '/nano.js'
+
       end
       body { self << yield }
     end
@@ -112,30 +114,33 @@ module Nano::Views
   end
 
   def home
-    div.status! do
-        span ""
-    end
-    h2 "Recent updates"
-    ul.posts! do
-      @posts.each do |post|
-        li do
-          span.author do
-            a post.author, :href => R(AuthorX, post.author)
+    div.main do
+        h2.header! "Updates"
+        ul.posts! do
+          @posts.each do |post|
+            li do
+              span.author do
+                a post.author, :href => R(AuthorX, post.author)
+              end
+              span.content post.content
+              span.timestamp "%s ago" % ActionView::Helpers::DateHelper.time_ago_in_words(post.created_at)
+            end
           end
-          span.content post.content
-          span.timestamp "%s ago" % ActionView::Helpers::DateHelper.time_ago_in_words(post.created_at)
         end
-      end
     end
-    h2 "New post"
-    form.new! :action => R(Index), :method => :post do
-      p "your name:"
-      input "", :type => "text", :name => :author
-      p "your message:"
-      textarea "", :name => :content, :rows => 10, :cols => 50
-      br
-      input :type => :submit, :value => "post!"
+
+    div.new do
+        h2 "New post"
+        form.new! :action => R(Index), :method => :post do
+          p "your name:"
+          input.required "", :type => "text", :name => :author
+          p "your message:"
+          textarea.required "", :name => :content, :rows => 10, :cols => 50
+          br
+          input :type => :submit, :value => "post!"
+        end
     end
+
   end
 
   def singleAuthor
