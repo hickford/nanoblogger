@@ -35,14 +35,13 @@ myChannel.bind('post-create', addPost);
           url: url,
           data: data,
           success: function () {   
+                $( 'html, body' ).animate( { scrollTop: 0 }, 0 );  
                 if (!connected)
                 {
                     // display post for folk without pusher. nasty.
                     addPost({'author':author.val(),'content':content.val()});
                 }
                 content.val(''); 
-                $( 'html, body' ).animate( { scrollTop: 0 }, 0 );  
-
             }
         });
         return false;
