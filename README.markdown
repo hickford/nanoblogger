@@ -1,7 +1,7 @@
 Nanoblogger
 =========
 
-A microblogging web application.
+A microblogging web application with realtime updates (using Pusher).
 
 Pusher credentials
 ---------
