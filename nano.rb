@@ -100,9 +100,8 @@ module Nano::Views
       head do
         title ttl
         link :rel => 'stylesheet',:type => 'text/css',:href => '/styles.css'
-        script "", :type => 'text/javascript', :src => 'https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js'
-        # script "", :type => 'text/javascript', :src => 'http://ajax.microsoft.com/ajax/jquery.validate/1.7/jquery.validate.min.js'
-        script "", :type => 'text/javascript', :src => 'http://js.pusherapp.com/1.6/pusher.min.js'
+        script "", :type => 'text/javascript', :src => '//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js'
+        script "", :type => 'text/javascript', :src => '//js.pusherapp.com/1.6/pusher.min.js'
         script "", :type => 'text/javascript', :src => '/nano.js'
 
       end
